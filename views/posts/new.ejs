@@ -1,11 +1,31 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>New Post</title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <title>新規投稿</title>
+    <link rel='stylesheet' href='/vendors/bootstrap/dist/css/bootstrap.min.css' />
   </head>
   <body>
-    <h1>New Post</h1>
-    <p>Write something</p>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+          <h1>新規投稿</h1>
+          <p>新しいブログ記事を書きます</p>
+          <form id="post_form">
+            <div class="form-group">
+              <label for="inputTitle">記事のタイトル</label>
+              <input type="text" class="form-control" id="inputTtitle" name="title" placeholder="Post title">
+            </div>
+            <div class="form-group">
+              <label for="inputBody">記事の内容</label>
+              <textarea id="body" class="form-control" cols="50" rows="10" name="body"></textarea>
+            </div>
+            <button type="submit" class="btn btn-default">投稿</button>
+          </form>
+        </div>
+      </div>
+    </div>
+    <script src='/vendors/jquery/dist/jquery.min.js'></script>
+    <script src='/vendors/bootstrap/dist/js/bootstrap.min.js'></script>
+    <script src='/javascripts/app.js'></script>
   </body>
 </html>

@@ -1,12 +1,31 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <title>ブログ</title>
+    <link rel='stylesheet' href='/vendors/bootstrap/dist/css/bootstrap.min.css' />
   </head>
   <body>
-    <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
-    <a href="/posts/new">New</a>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+          <div class="row">
+            <div class="col-md-10">&nbsp;
+            </div>
+            <div class="col-md-2">
+              <a href="/posts/new" class="btn btn-info">新規投稿</a>
+            </div>
+          </div>
+          <% for (var i = 0; i < posts.length; i++) { %>
+            <% var post = posts[i]; %>
+            <div class="row">
+              <h2><a href="/posts/<%= post.objectId %>"><%= post.title %></a></h2>
+            </div>
+          <% } %>
+        </div>
+      </div>
+    </div>
+    <script src='/vendors/jquery/dist/jquery.min.js'></script>
+    <script src='/vendors/bootstrap/dist/js/bootstrap.min.js'></script>
+    <script src='/javascripts/app.js'></script>
   </body>
 </html>
