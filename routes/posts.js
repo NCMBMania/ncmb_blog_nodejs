@@ -17,10 +17,22 @@ router.get('/:objectId', function(req, res, next) {
 });
 
 router.post('/', function(req, res, next) {
+  // ユーザの作成
+  var currentUser = new ncmb.User(req.session.currentUser);
   let Post = ncmb.DataStore('Post');
   var post = new Post;
   post.set('title', req.body.title);
   post.set('body', req.body.body);
+  var acl = new ncmb.Acl;
+  
+  post.set('public', (req.body.public == 'true'));
+  if (req.body.public == 'true') {
+    acl.setPublicReadAccess(true);
+  } else {
+    acl.setUserReadAccess(currentUser, true)
+  }
+  acl.setUserWriteAccess(currentUser, true)
+  post.set('acl', acl);
   post.save()
     .then(function(obj) {
       res.status(201).json(obj);
