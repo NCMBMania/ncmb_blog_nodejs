@@ -4,6 +4,7 @@ module.exports = {
       var currentUser = new ncmb.User(req.session.currentUser);
       if (currentUser) {
         ncmb.sessionToken = currentUser.sessionToken;
+        ncmb.currentUser = currentUser;
       }
     }
   }

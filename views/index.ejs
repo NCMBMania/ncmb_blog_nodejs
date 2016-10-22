@@ -33,7 +33,7 @@
                 </h2>
               </div>
               <div class="col-md-2">
-                <% if (Post.editable(post)) {%>
+                <% if (post.editable()) {%>
                   <a href="/posts/<%= post.objectId %>/edit" class="btn btn-default">編集</a>
                 <% } %>
               </div>

@@ -1,22 +1,12 @@
 var express = require('express');
 var router = express.Router();
 var ncmb = require('../libs/ncmb');
+var common = require('../libs/common');
+var Post   = require('../models/post')(ncmb);
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  var Post = ncmb.DataStore('Post');
-  ncmb.sessionToken = req.session.currentUser ? req.session.currentUser.sessionToken : null;
-  Post.editable = function(post) {
-    if (typeof req.session.currentUser === 'undefined') {
-      return false;
-    }
-    if (post.acl['*'] && post.acl['*'].write)
-      return true;
-    objectId = req.session.currentUser.objectId;
-    if (post.acl[objectId] && post.acl[objectId].write)
-      return true;
-  }
-  
+  common.setSessionToken(req, ncmb);
   Post.order('createDate', true).fetchAll()
     .then(function(posts) {
       res.render('index', { posts: posts, currentUser: req.session.currentUser, Post: Post});
