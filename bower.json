@@ -16,6 +16,7 @@
     "tests"
   ],
   "dependencies": {
-    "bootstrap": "boostrap#^3.3.7"
+    "bootstrap": "boostrap#^3.3.7",
+    "js-url": "^2.3.1"
   }
 }

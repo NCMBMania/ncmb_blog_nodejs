@@ -1,0 +1,12 @@
+<%- include('../shared/header', {title: "投稿の編集"}) %>
+<div class="row">
+  <div class="col-md-8 col-md-offset-2">
+    <h1>投稿の編集</h1>
+    <p>ブログ記事を編集します</p>
+    <form id="post_edit_form">
+      <input type="hidden" name="objectId" value="<%= post.objectId %>" />
+      <%- include('form', {post: post}) %>
+    </form>
+  </div>
+</div>
+<%- include('../shared/footer') %>

@@ -36,9 +36,19 @@ app.use(session({
   })
 }));
 
+var checkAuth = express.Router();
+checkAuth.use(function(req, res, next) {
+  if (req.method === 'GET' && req.url.match(/^\/[a-zA-Z0-9]$/)) {
+    return next()
+  }
+  if (typeof req.session.currentUser === 'undefined')
+    return res.redirect(`/login?path=${encodeURI(req.url)}`);
+  next();
+});
+
 app.use('/', routes);
 app.use('/users', users);
-app.use('/posts', posts);
+app.use('/posts', checkAuth, posts);
 app.use('/sessions', sessions);
 
 // catch 404 and forward to error handler
