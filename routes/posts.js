@@ -2,6 +2,8 @@ var express = require('express');
 var router = express.Router();
 var ncmb   = require('../libs/ncmb');
 var common = require('../libs/common');
+var config = require('../config');
+var Post   = require('../models/post')(ncmb);
 
 /* GET home page. */
 router.get('/new', function(req, res, next) {
@@ -11,7 +13,6 @@ router.get('/new', function(req, res, next) {
 
 router.get('/:objectId', function(req, res, next) {
   common.setSessionToken(req, ncmb);
-  let Post = ncmb.DataStore('Post');
   Post.equalTo('objectId', req.params.objectId)
     .fetch()
     .then(function(post) {
@@ -21,7 +22,6 @@ router.get('/:objectId', function(req, res, next) {
 
 router.get('/:objectId/edit', function(req, res, next) {
   common.setSessionToken(req, ncmb);
-  let Post = ncmb.DataStore('Post');
   Post.equalTo('objectId', req.params.objectId)
     .fetch()
     .then(function(post) {
@@ -53,10 +53,27 @@ router.put('/:objectId', function(req, res, next) {
     })
 });
 
+router.post('/files', function(req, res, next) {
+  common.setSessionToken(req, ncmb);
+  extension = common.detectFileType(req.rawBody);
+  name = `${common.guid()}.${extension}`
+  ncmb.File.upload(name, req.rawBody)
+    .then(function(data){
+      // アップロード後処理
+      var json = {
+        url: `https://mb.api.cloud.nifty.com/2013-09-01/applications/${config.application_id}/publicFiles/${name}`
+      }
+      res.status(200).json(json);
+     })
+    .catch(function(err){
+      // エラー処理
+      res.status(400).json(err);
+    });
+});
+
 function buildPost(req) {
   // ユーザの作成
   var currentUser = new ncmb.User(req.session.currentUser);
-  let Post = ncmb.DataStore('Post');
   var post = new Post;
   post.set('objectId', req.params.objectId);
   post.set('title', req.body.title);

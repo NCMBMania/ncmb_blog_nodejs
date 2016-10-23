@@ -19,6 +19,23 @@ var app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
+app.use(function(req, res, next) {
+  var contentType = req.headers['content-type'] || ''
+    , mime = contentType.split(';')[0];
+  if (mime != 'text/plain') {
+    return next();
+  }
+  req.rawBody = '';
+  req.on('data', function(chunk) {
+    req.rawBody += chunk;
+  });
+
+  req.on('end', function() {
+    req.rawBody = new Buffer(req.rawBody.toString('binary'),'binary');
+    next();
+  });
+});
+
 // uncomment after placing your favicon in /public
 // app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));

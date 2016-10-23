@@ -3,3 +3,4 @@ config.js
 public/vendors
 npm-debug.log
 .DS_Store
+session.nedb

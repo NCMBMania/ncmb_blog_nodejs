@@ -14,8 +14,9 @@ $("#login_form").on('submit', function(e) {
   sendForm({url: '/sessions', form: $(this).serialize()}, function() {
     var path = url('?path');
     if (path && path.match(/^\/.*/)) {
-      location.href = path;
+      return location.href = path;
     }
+    return location.href = "/";
   });
 });
 
@@ -49,3 +50,43 @@ function sendForm(params, callback) {
     console.error(err);
   });
 }
+
+var textarea = $("form #body");
+var cancelDrop = function(e) {
+  e.preventDefault();
+  e.stopPropagation();
+  textarea.removeClass('drop');
+  return false;
+}
+var startDrop = function(e) {
+  textarea.addClass('drop');
+  e.preventDefault();
+  e.stopPropagation();
+  return false;
+}
+textarea.bind("dragenter", startDrop);
+textarea.bind("dragover",  startDrop);
+textarea.bind("drop", function(e) {
+  var file = e.originalEvent.dataTransfer.files[0];
+  var fileReader = new FileReader();
+  fileReader.onload = function(e) {
+    $.ajax({
+      url: '/posts/files',
+      type: 'POST',
+      data: e.target.result,
+      contentType: false,
+      processData: false
+    })
+    .then(function(result) {
+      var cursorPos = textarea.prop('selectionStart');
+      var v = textarea.val();
+      var textBefore = v.substring(0,  cursorPos);
+      var textAfter  = v.substring(cursorPos, v.length);
+      textarea.val(textBefore + '![](' + result.url + ')' + textAfter);
+    }, function(err) {
+      console.log(error);
+    })
+  }
+  fileReader.readAsBinaryString(file);
+  cancelDrop(e);
+});
